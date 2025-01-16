@@ -1,7 +1,7 @@
 use std::io::{self, Write};
 use log::info;
 
-use grrs::{Config, search_string};
+use grrs::Config;
 
 fn main() {
     env_logger::init();
@@ -10,9 +10,10 @@ fn main() {
     let stdout = io::stdout(); // get the global stdout entity
     let mut handle = io::BufWriter::new(stdout.lock()); // optional: wrap that handle in a buffer
 
-    let cfg = Config::new().unwrap();
+    let mut cfg = Config::new().unwrap();
+    let format = false; // Can remove if each line is not too long for the bugger
 
-    match search_string(cfg.reader, &cfg.args.pattern) {
+    match cfg.search_string(format) {
         Ok(result) => writeln!(handle, "{}", result).unwrap(), // write line to stdout instead of using println! macro, less expensive operation,
         Err(_) => writeln!(handle, "Error!").unwrap(),
     };
